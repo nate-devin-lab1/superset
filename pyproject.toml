@@ -413,7 +413,7 @@ section-order = [
 ]
 
 [tool.ruff.lint.flake8-tidy-imports]
-banned-api = { json = { msg = "Use superset.utils.json instead" }, simplejson = { msg = "Use superset.utils.json instead" } }
+banned-api = { json = { msg = "Use superset.utils.json instead" }, simplejson = { msg = "Use superset.utils.json instead" }, "distutils.version" = { msg = "distutils is deprecated and removed in Python 3.12+. Use packaging.version instead" } }
 
 [tool.ruff.format]
 # Like Black, use double quotes for strings.
