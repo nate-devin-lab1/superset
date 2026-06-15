@@ -324,7 +324,12 @@ export const controls = {
     optionRenderer: (c: Column) => <StyledColumnOption column={c} showType />,
     valueKey: 'column_name',
     mapStateToProps: (state: ControlState) => {
-      const props: { choices?: Column[]; default?: string | null } = {};
+      const stateAny = state as Record<string, any>;
+      const props: {
+        choices?: Column[];
+        default?: string | null;
+        warning?: string;
+      } = {};
       if (state.datasource) {
         props.choices = state.datasource.granularity_sqla;
         props.default = null;
@@ -333,6 +338,14 @@ export const controls = {
         } else if (props.choices && props.choices.length > 0) {
           props.default = props.choices[0].column_name;
         }
+      }
+      if (
+        stateAny.form_data?.dashboardId &&
+        stateAny.form_data?.extra_form_data?.granularity_sqla
+      ) {
+        props.warning = t(
+          'Time column is being overridden by the dashboard',
+        );
       }
       return props;
     },
@@ -349,9 +362,16 @@ export const controls = {
         'The options here are defined on a per database ' +
         'engine basis in the Superset source code.',
     ),
-    mapStateToProps: (state: ControlState) => ({
-      choices: state.datasource ? state.datasource.time_grain_sqla : null,
-    }),
+    mapStateToProps: (state: ControlState) => {
+      const stateAny = state as Record<string, any>;
+      return {
+        choices: state.datasource ? state.datasource.time_grain_sqla : null,
+        ...(stateAny.form_data?.dashboardId &&
+        stateAny.form_data?.extra_form_data?.time_grain_sqla
+          ? { warning: t('Time grain is being overridden by the dashboard') }
+          : undefined),
+      };
+    },
   },
 
   time_range: {

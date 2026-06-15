@@ -53,6 +53,21 @@ export default {
                 'api/v1/chart/?q=(filters:!((col:viz_type,opr:sw,value:deck)))',
               placeholder: t('Select charts'),
               onAsyncErrorMessage: t('Error while fetching charts'),
+              mapStateToProps: (state: Record<string, any>) => {
+                const extraFormData = state?.form_data?.extra_form_data;
+                const dashboardId = state?.form_data?.dashboardId;
+                if (
+                  dashboardId &&
+                  extraFormData?.visible_deckgl_layers !== undefined
+                ) {
+                  return {
+                    warning: t(
+                      'Layer visibility has been modified by the dashboard',
+                    ),
+                  };
+                }
+                return {};
+              },
               mutator: (
                 data: {
                   result?: { id: number; slice_name: string }[];
