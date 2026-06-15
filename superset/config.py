@@ -889,7 +889,9 @@ DEFAULT_FEATURE_FLAGS: dict[str, bool] = {
 
 # ----------------------------------------------------------------------
 SSH_TUNNEL_MANAGER_CLASS = "superset.extensions.ssh.SSHManager"
-SSH_TUNNEL_LOCAL_BIND_ADDRESS = "127.0.0.1"
+SSH_TUNNEL_LOCAL_BIND_ADDRESS = os.environ.get(
+    "SSH_TUNNEL_LOCAL_BIND_ADDRESS", "127.0.0.1"
+)
 #: Timeout (seconds) for tunnel connection (open_channel timeout)
 SSH_TUNNEL_TIMEOUT_SEC = 10.0
 #: Timeout (seconds) for transport socket (``socket.settimeout``)
@@ -1724,7 +1726,7 @@ EXTENSION_STARTUP_LOCK_TIMEOUT = 30  # Timeout in seconds for extension update l
 FLASK_APP_MUTATOR = None
 
 # smtp server configuration
-SMTP_HOST = "localhost"
+SMTP_HOST = os.environ.get("SMTP_HOST", "localhost")
 SMTP_STARTTLS = True
 SMTP_SSL = False
 SMTP_USER = "superset"
@@ -2452,20 +2454,27 @@ GLOBAL_ASYNC_QUERIES_TRANSPORT: Literal["polling", "ws"] = "polling"
 GLOBAL_ASYNC_QUERIES_POLLING_DELAY = int(
     timedelta(milliseconds=500).total_seconds() * 1000
 )
-GLOBAL_ASYNC_QUERIES_WEBSOCKET_URL = "ws://127.0.0.1:8080/"
+GLOBAL_ASYNC_QUERIES_WEBSOCKET_URL = os.environ.get(
+    "GLOBAL_ASYNC_QUERIES_WEBSOCKET_URL", "ws://127.0.0.1:8080/"
+)
 
 # Global async queries cache backend configuration options:
 # - Set 'CACHE_TYPE' to 'RedisCache' for RedisCacheBackend.
 # - Set 'CACHE_TYPE' to 'RedisSentinelCache' for RedisSentinelCacheBackend.
 GLOBAL_ASYNC_QUERIES_CACHE_BACKEND = {
     "CACHE_TYPE": "RedisCache",
-    "CACHE_REDIS_HOST": "localhost",
-    "CACHE_REDIS_PORT": 6379,
+    "CACHE_REDIS_HOST": os.environ.get("GLOBAL_ASYNC_QUERIES_REDIS_HOST", "localhost"),
+    "CACHE_REDIS_PORT": int(os.environ.get("GLOBAL_ASYNC_QUERIES_REDIS_PORT", "6379")),
     "CACHE_REDIS_USER": "",
     "CACHE_REDIS_PASSWORD": "",
     "CACHE_REDIS_DB": 0,
     "CACHE_DEFAULT_TIMEOUT": 300,
-    "CACHE_REDIS_SENTINELS": [("localhost", 26379)],
+    "CACHE_REDIS_SENTINELS": [
+        (
+            os.environ.get("GLOBAL_ASYNC_QUERIES_REDIS_SENTINEL_HOST", "localhost"),
+            int(os.environ.get("GLOBAL_ASYNC_QUERIES_REDIS_SENTINEL_PORT", "26379")),
+        )
+    ],
     "CACHE_REDIS_SENTINEL_MASTER": "mymaster",
     "CACHE_REDIS_SENTINEL_PASSWORD": None,
     "CACHE_REDIS_SSL": False,  # True or False
