@@ -82,7 +82,7 @@ class LogPruneCommand(BaseCommand):
 
         total_rows = len(ids_to_delete)
 
-        logger.info("Total rows to be deleted: %s", f"{total_rows:,}")
+        logger.info("Total rows to be deleted: %s", "{:,}".format(total_rows))
 
         next_logging_threshold = 1
 
@@ -105,7 +105,7 @@ class LogPruneCommand(BaseCommand):
             if percentage_complete >= next_logging_threshold:
                 logger.info(
                     "Deleted %s rows from the logs table older than %s days (%d%% complete)",  # noqa: E501
-                    f"{total_deleted:,}",
+                    "{:,}".format(total_deleted),
                     self.retention_period_days,
                     percentage_complete,
                 )
@@ -116,7 +116,7 @@ class LogPruneCommand(BaseCommand):
         formatted_time = f"{int(minutes):02}:{int(seconds):02}"
         logger.info(
             "Pruning complete: %s rows deleted in %s",
-            f"{total_deleted:,}",
+            "{:,}".format(total_deleted),
             formatted_time,
         )
 

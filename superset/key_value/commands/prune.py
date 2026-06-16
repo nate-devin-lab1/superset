@@ -94,7 +94,7 @@ class KeyValuePruneCommand(BaseCommand):
 
         total_rows = len(ids_to_delete)
 
-        logger.info("Total rows to be deleted: %s", f"{total_rows:,}")
+        logger.info("Total rows to be deleted: %s", "{:,}".format(total_rows))
 
         next_logging_threshold = 1
 
@@ -125,7 +125,7 @@ class KeyValuePruneCommand(BaseCommand):
             if percentage_complete >= next_logging_threshold:
                 logger.info(
                     "Deleted %s expired rows from the key-value store (%d%% complete)",
-                    f"{total_deleted:,}",
+                    "{:,}".format(total_deleted),
                     percentage_complete,
                 )
                 next_logging_threshold += 1
@@ -135,7 +135,7 @@ class KeyValuePruneCommand(BaseCommand):
         formatted_time = f"{int(minutes):02}:{int(seconds):02}"
         logger.info(
             "Pruning complete: %s expired rows deleted in %s",
-            f"{total_deleted:,}",
+            "{:,}".format(total_deleted),
             formatted_time,
         )
 
