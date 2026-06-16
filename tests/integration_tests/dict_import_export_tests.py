@@ -61,10 +61,14 @@ class TestDictImportExport(SupersetTestCase):
         name,
         schema=None,
         id=0,
-        cols_names=[],  # noqa: B006
+        cols_names=None,
         cols_uuids=None,
-        metric_names=[],  # noqa: B006
+        metric_names=None,
     ):
+        if cols_names is None:
+            cols_names = []
+        if metric_names is None:
+            metric_names = []
         database_name = "main"
         name = f"{NAME_PREFIX}{name}"
         params = {DBREF: id, "database_name": database_name}
