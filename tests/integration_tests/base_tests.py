@@ -574,7 +574,7 @@ class SupersetTestCase(TestCase):
         dashboard_title: str,
         slug: Optional[str],
         owners: list[int],
-        roles: list[int] = [],  # noqa: B006
+        roles: list[int] | None = None,
         created_by=None,
         slices: Optional[list[Slice]] = None,
         position_json: str = "",
@@ -586,6 +586,8 @@ class SupersetTestCase(TestCase):
     ) -> Dashboard:
         obj_owners = list()  # noqa: C408
         obj_roles = list()  # noqa: C408
+        if roles is None:
+            roles = []
         slices = slices or []
         for owner in owners:
             user = db.session.query(security_manager.user_model).get(owner)
@@ -624,12 +626,14 @@ class SupersetTestCase(TestCase):
     def get_list(
         self,
         asset_type: str,
-        filter: dict[str, Any] = {},  # noqa: B006
+        filter: dict[str, Any] | None = None,
         username: str = ADMIN_USERNAME,
     ) -> Response:
         """
         Get list of assets, by default using admin account. Can be filtered.
         """
+        if filter is None:
+            filter = {}
         self.login(username)
         uri = f"api/v1/{asset_type}/?q={rison.dumps(filter)}"
         response = self.get_assert_metric(uri, "get_list")
