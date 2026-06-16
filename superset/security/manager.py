@@ -3322,7 +3322,8 @@ class SupersetSecurityManager(  # pylint: disable=too-many-public-methods
                 datasource = viz.datasource
                 form_data = viz.form_data
 
-            assert datasource
+            if not datasource:
+                raise ValueError("Datasource is required for access validation")
 
             if not (
                 self.can_access_schema(datasource)

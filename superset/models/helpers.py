@@ -2557,7 +2557,8 @@ class ExploreMixin:  # pylint: disable=too-many-public-methods
         template_processor: Optional[BaseTemplateProcessor] = None,
     ) -> Column:
         if utils.is_adhoc_metric(series_limit_metric):
-            assert isinstance(series_limit_metric, dict)
+            if not isinstance(series_limit_metric, dict):
+                raise TypeError("Expected series_limit_metric to be a dict")
             ob = self.adhoc_metric_to_sqla(series_limit_metric, columns_by_name)
         elif (
             isinstance(series_limit_metric, str)
@@ -3102,7 +3103,8 @@ class ExploreMixin:  # pylint: disable=too-many-public-methods
         metrics_exprs: list[ColumnElement] = []
         for metric in metrics:
             if utils.is_adhoc_metric(metric):
-                assert isinstance(metric, dict)
+                if not isinstance(metric, dict):
+                    raise TypeError("Expected metric to be a dict")
                 metrics_exprs.append(
                     self.adhoc_metric_to_sqla(
                         metric=metric,
@@ -3499,7 +3501,8 @@ class ExploreMixin:  # pylint: disable=too-many-public-methods
                         )
                     )
                 elif is_list_target:
-                    assert isinstance(eq, (tuple, list))
+                    if not isinstance(eq, (tuple, list)):
+                        raise TypeError("Expected filter value to be a tuple or list")
                     if len(eq) == 0:
                         raise QueryObjectValidationError(
                             _("Filter value list cannot be empty")

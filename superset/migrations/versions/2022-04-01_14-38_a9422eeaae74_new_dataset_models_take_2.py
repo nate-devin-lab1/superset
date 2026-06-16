@@ -540,7 +540,8 @@ def postprocess_datasets(session: Session) -> None:  # noqa: C901
         Database.id == SqlaTable.database_id,
         isouter=True,
     )
-    assert session.query(func.count()).select_from(joined_tables).scalar() == total
+    if session.query(func.count()).select_from(joined_tables).scalar() != total:
+        raise RuntimeError("Row count mismatch after join in dataset migration")
 
     print(f">> Run postprocessing on {total} datasets")
 

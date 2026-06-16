@@ -338,7 +338,8 @@ class SupersetResultSet:
         # Nested column keys are drawn from the same column_names used to build
         # the table/df, so every key is guaranteed to be present as a column.
         for column, values in self._nested_columns.items():
-            assert column in df.columns
+            if column not in df.columns:
+                raise ValueError(f"Column {column!r} not found in DataFrame")
             df[column] = values
         return df
 
