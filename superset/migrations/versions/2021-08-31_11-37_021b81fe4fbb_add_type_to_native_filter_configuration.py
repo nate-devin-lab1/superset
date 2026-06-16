@@ -63,7 +63,7 @@ def upgrade():
             continue
         try:
             json_meta = json.loads(dashboard.json_metadata)
-        except:  # noqa: E722
+        except Exception:
             logger.exception("[AddTypeToNativeFilter] Error loading json_metadata")
             continue
 
@@ -103,7 +103,7 @@ def downgrade():
             continue
         try:
             json_meta = json.loads(dashboard.json_metadata)
-        except:  # noqa: E722
+        except Exception:
             logger.exception("[RemoveTypeToNativeFilter] Error loading json_metadata")
             continue
 
