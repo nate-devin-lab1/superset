@@ -126,7 +126,8 @@ def test_datetime(console: Console, engine: Engine) -> None:
     console.print("Reading timestamp value...")
     select_stmt = select(table)
     row = engine.execute(select_stmt).fetchone()
-    assert row[0] == now
+    if row[0] != now:
+        raise RuntimeError(f"Timestamp mismatch: expected {now!r}, got {row[0]!r}")
     console.print(":thumbs_up: [green]Success!")
 
 
@@ -138,7 +139,7 @@ def test_datetime(console: Console, engine: Engine) -> None:
     "raw_engine_kwargs",
     help="Connect args as JSON or YAML",
 )
-def test_db(sqlalchemy_uri: str, raw_engine_kwargs: str | None = None) -> None:
+def test_db(sqlalchemy_uri: str, raw_engine_kwargs: str | None = None) -> None:  # noqa: PT028
     """
     Run a series of tests against an analytical database.
 

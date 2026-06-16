@@ -53,8 +53,7 @@ class EmbeddedView(BaseSupersetView):
 
         if not embedded:
             abort(404)
-
-        assert embedded is not None
+            raise RuntimeError("unreachable")  # helps mypy narrow the type
 
         # validate request referrer in allowed domains
         is_referrer_allowed = not embedded.allowed_domains

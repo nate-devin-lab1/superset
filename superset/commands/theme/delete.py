@@ -42,7 +42,8 @@ class DeleteThemeCommand(BaseCommand):
     @transaction(on_error=partial(on_error, reraise=ThemeDeleteFailedError))
     def run(self) -> None:
         self.validate()
-        assert self._models
+        if not self._models:
+            raise RuntimeError("Models were not set by validate")
 
         # Dissociate dashboards from themes before deleting
         self._dissociate_dashboards()

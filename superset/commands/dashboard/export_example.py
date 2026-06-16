@@ -538,7 +538,8 @@ class ExportExampleCommand(BaseCommand):
         Content generators return bytes (either YAML encoded or raw Parquet).
         """
         self.validate()
-        assert self._dashboard is not None
+        if self._dashboard is None:
+            raise RuntimeError("Dashboard was not set by validate")
 
         # Collect all charts and their datasets
         charts = self._dashboard.slices

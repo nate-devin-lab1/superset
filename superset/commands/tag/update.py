@@ -39,7 +39,8 @@ class UpdateTagCommand(UpdateMixin, BaseCommand):
     @transaction()
     def run(self) -> Model:
         self.validate()
-        assert self._model
+        if self._model is None:
+            raise RuntimeError("Model was not set by validate")
         self._model.name = self._properties["name"]
         TagDAO.create_tag_relationship(
             objects_to_tag=self._properties.get("objects_to_tag", []),

@@ -643,7 +643,8 @@ class Superset(BaseSupersetView):
 
         utils.remove_extra_adhoc_filters(form_data)
 
-        assert slc
+        if not slc:
+            raise ValueError("Chart object is required")
         slc.params = json.dumps(form_data, indent=2, sort_keys=True)
         slc.datasource_name = datasource_name
         slc.viz_type = form_data["viz_type"]

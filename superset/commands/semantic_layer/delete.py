@@ -52,7 +52,8 @@ class DeleteSemanticLayerCommand(BaseCommand):
     )
     def run(self) -> None:
         self.validate()
-        assert self._model
+        if self._model is None:
+            raise RuntimeError("Model was not set by validate")
         SemanticLayerDAO.delete([self._model])
 
     def validate(self) -> None:
@@ -75,7 +76,8 @@ class DeleteSemanticViewCommand(BaseCommand):
     )
     def run(self) -> None:
         self.validate()
-        assert self._model
+        if self._model is None:
+            raise RuntimeError("Model was not set by validate")
         SemanticViewDAO.delete([self._model])
 
     def validate(self) -> None:

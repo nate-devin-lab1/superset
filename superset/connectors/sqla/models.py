@@ -1446,7 +1446,7 @@ class SqlaTable(
         name = escape(self.name)
         url = escape(self.explore_url)
         anchor = f'<a target="_blank" href="{url}">{name}</a>'
-        return Markup(anchor)
+        return Markup(anchor)  # noqa: S704
 
     def get_catalog_perm(self) -> str | None:
         """Returns catalog permission if present, database one otherwise."""
@@ -1835,7 +1835,8 @@ class SqlaTable(
         template_processor: BaseTemplateProcessor | None = None,
     ) -> Column:
         if utils.is_adhoc_metric(series_limit_metric):
-            assert isinstance(series_limit_metric, dict)
+            if not isinstance(series_limit_metric, dict):
+                raise TypeError("Expected series_limit_metric to be a dict")
             ob = self.adhoc_metric_to_sqla(series_limit_metric, columns_by_name)
         elif (
             isinstance(series_limit_metric, str)

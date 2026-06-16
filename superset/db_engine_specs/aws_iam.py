@@ -30,7 +30,7 @@ from __future__ import annotations
 
 import logging
 import threading
-from typing import Any, TYPE_CHECKING, TypedDict
+from typing import Any, cast, TYPE_CHECKING, TypedDict
 
 from cachetools import TTLCache
 
@@ -450,10 +450,8 @@ class AWSIAMAuthMixin:
                 )
             )
 
-        # Type assertions after validation (mypy doesn't narrow types from list check)
-        assert role_arn is not None
-        assert region is not None
-        assert db_username is not None
+        if role_arn is None or region is None or db_username is None:
+            raise ValueError("role_arn, region, and db_username are all required")
 
         # Get hostname and port from the database URI
         uri = make_url_safe(database.sqlalchemy_uri_decrypted)
@@ -608,45 +606,37 @@ class AWSIAMAuthMixin:
                 )
             )
 
-        # Type assertions after validation
-        assert role_arn is not None
-        assert region is not None
-        assert db_name is not None
-
         # Step 1: Assume the IAM role
         credentials = cls.get_iam_credentials(
-            role_arn=role_arn,
-            region=region,
+            role_arn=cast(str, role_arn),
+            region=cast(str, region),
             external_id=external_id,
             session_duration=session_duration,
         )
 
         # Step 2: Get Redshift credentials based on deployment type
         if is_serverless:
-            assert workgroup_name is not None
             logger.debug(
                 "Applying Redshift Serverless IAM authentication for workgroup %s",
                 workgroup_name,
             )
             db_user, db_password = cls.generate_redshift_credentials(
                 credentials=credentials,
-                workgroup_name=workgroup_name,
-                db_name=db_name,
-                region=region,
+                workgroup_name=cast(str, workgroup_name),
+                db_name=cast(str, db_name),
+                region=cast(str, region),
             )
         else:
-            assert cluster_identifier is not None
-            assert db_username is not None
             logger.debug(
                 "Applying Redshift provisioned cluster IAM authentication for %s",
                 cluster_identifier,
             )
             db_user, db_password = cls.generate_redshift_cluster_credentials(
                 credentials=credentials,
-                cluster_identifier=cluster_identifier,
-                db_user=db_username,
-                db_name=db_name,
-                region=region,
+                cluster_identifier=cast(str, cluster_identifier),
+                db_user=cast(str, db_username),
+                db_name=cast(str, db_name),
+                region=cast(str, region),
             )
 
         # Step 3: Update connection parameters

@@ -156,7 +156,8 @@ class ChartTypeSuggester:
         config: XYChartConfig, x_analysis: Dict[str, Any], y_analysis: Dict[str, Any]
     ) -> Tuple[List[str], List[str]]:
         """Check for chart type specific issues."""
-        assert config.x is not None  # caller guards for None
+        if config.x is None:
+            raise ValueError("config.x must not be None")
         issues = []
         suggestions = []
 
@@ -205,7 +206,8 @@ class ChartTypeSuggester:
         x_is_id: bool,
     ) -> Tuple[List[str], List[str]]:
         """Check line chart specific issues."""
-        assert config.x is not None
+        if config.x is None:
+            raise ValueError("config.x must not be None")
         issues = []
         suggestions = []
 
@@ -239,7 +241,8 @@ class ChartTypeSuggester:
         config: XYChartConfig, x_is_categorical: bool, num_metrics: int
     ) -> Tuple[List[str], List[str]]:
         """Check scatter chart specific issues."""
-        assert config.x is not None
+        if config.x is None:
+            raise ValueError("config.x must not be None")
         issues = []
         suggestions = []
 
@@ -270,7 +273,8 @@ class ChartTypeSuggester:
         config: XYChartConfig, x_is_temporal: bool
     ) -> Tuple[List[str], List[str]]:
         """Check area chart specific issues."""
-        assert config.x is not None
+        if config.x is None:
+            raise ValueError("config.x must not be None")
         issues = []
         suggestions = []
 
@@ -310,7 +314,8 @@ class ChartTypeSuggester:
         config: XYChartConfig, x_is_id: bool
     ) -> Tuple[List[str], List[str]]:
         """Check bar chart specific issues."""
-        assert config.x is not None
+        if config.x is None:
+            raise ValueError("config.x must not be None")
         issues = []
         suggestions = []
 
