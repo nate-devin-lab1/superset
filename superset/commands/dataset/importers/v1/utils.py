@@ -343,10 +343,12 @@ def load_data(data_uri: str, dataset: SqlaTable, database: Database) -> None:
     validate_data_uri(data_uri)
     logger.info("Downloading data from %s", data_uri)
     opener = request.build_opener(_ValidatingRedirectHandler)
-    data = opener.open(data_uri)  # pylint: disable=consider-using-with  # noqa: S310
-    if data_uri.endswith(".gz"):
-        data = gzip.open(data)
-    df = pd.read_csv(data, encoding="utf-8")
+    with opener.open(data_uri) as response:  # noqa: S310
+        if data_uri.endswith(".gz"):
+            with gzip.open(response) as gz_data:
+                df = pd.read_csv(gz_data, encoding="utf-8")
+        else:
+            df = pd.read_csv(response, encoding="utf-8")
     dtype = get_dtype(df, dataset)
 
     _convert_temporal_columns(df, dtype)
