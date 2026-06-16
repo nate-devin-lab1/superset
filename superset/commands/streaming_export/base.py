@@ -261,7 +261,7 @@ class BaseStreamingCSVExportCommand(BaseCommand):
                     total_mb = total_bytes / (1024 * 1024)
                     logger.info(
                         "Streaming CSV completed: %s rows, %.1fMB in %.2fs",
-                        f"{row_count:,}",
+                        "{:,}".format(row_count),
                         total_mb,
                         total_time,
                     )

@@ -156,10 +156,10 @@ def print_processed_batch(
     logger.info(
         "%s - %s of %s %s rows processed (%s%%)",
         elapsed_formatted,
-        f"{rows_processed:,}",
-        f"{total_rows:,}",
+        "{:,}".format(rows_processed),
+        "{:,}".format(total_rows),
         model.__tablename__,
-        f"{(rows_processed / total_rows) * 100:.2f}",
+        "{:.2f}".format((rows_processed / total_rows) * 100),
     )
 
 
@@ -198,7 +198,7 @@ def update_catalog_column(
         logger.info(
             "Total rows to be processed for %s: %s",
             model.__tablename__,
-            f"{total_rows:,}",
+            "{:,}".format(total_rows),
         )
 
         batch_size = get_batch_size(session)
@@ -322,7 +322,7 @@ def delete_models_non_default_catalog(
         logger.info(
             "Total rows to be processed for %s: %s",
             model.__tablename__,
-            f"{total_rows:,}",
+            "{:,}".format(total_rows),
         )
 
         batch_size = get_batch_size(session)
